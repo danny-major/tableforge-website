@@ -1,242 +1,704 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TableForge</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TableForge</title>
+  <style>
+    :root{
+      --bg:#0d1116;
+      --panel:#171e28;
+      --panel-soft:#1b2430;
+      --border:rgba(255,255,255,.08);
+      --border-strong:rgba(40,198,219,.25);
+      --text:#f3f7fb;
+      --muted:#9ba8b8;
+      --highlight:#28c6db;
+      --highlight-soft:rgba(40,198,219,.12);
+      --button:#28c6db;
+      --button-text:#081217;
+      --max:1200px;
+      --shadow:0 16px 50px rgba(0,0,0,.28);
+    }
 
-<style>
-:root{
-  --bg:#0d1116;
-  --panel:#171e28;
-  --panel-soft:#1b2430;
-  --border:rgba(255,255,255,.08);
-  --border-strong:rgba(40,198,219,.25);
-  --text:#f3f7fb;
-  --muted:#9ba8b8;
-  --highlight:#28c6db;
-  --highlight-soft:rgba(40,198,219,.12);
-  --button:#28c6db;
-  --button-text:#081217;
-  --max:1200px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-.wrap{width:min(var(--max),calc(100% - 32px));margin:auto}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Arial,Helvetica,sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(40,198,219,.08), transparent 30%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
 
-.nav{
-  position:sticky;
-  top:0;
-  background:rgba(13,17,22,.85);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--border);
-}
-.nav-inner{
-  display:flex;
-  justify-content:space-between;
-  padding:18px 0;
-}
-.brand{font-weight:800;text-transform:uppercase}
-.nav-links{display:flex;gap:20px}
-.nav-links a{color:var(--muted);text-decoration:none}
-.nav-links a:hover{color:#fff}
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    h1,h2,h3,p{margin:0}
 
-.hero{text-align:center;padding:80px 0}
-h1{font-size:clamp(2.5rem,5vw,4rem)}
-.hero p{color:var(--muted);max-width:700px;margin:auto}
+    .wrap{
+      width:min(var(--max),calc(100% - 32px));
+      margin:auto;
+    }
 
-.btn{
-  padding:14px 20px;
-  border-radius:16px;
-  font-weight:700;
-  text-decoration:none;
-  display:inline-block;
-  margin-top:20px;
-}
-.btn-primary{background:var(--button);color:var(--button-text)}
-.btn-secondary{border:1px solid var(--border)}
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(13,17,22,.85);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);
+    }
 
-.section{padding:50px 0}
-.section-title{text-align:center;margin-bottom:20px}
-.section-title p{color:var(--muted)}
+    .nav-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      padding:18px 0;
+    }
 
-.card-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:16px;
-}
-.card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  padding:20px;
-  border-radius:16px;
-  text-align:center;
-}
-.card p{color:var(--muted)}
+    .brand{
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
 
-.carousel-wrap{position:relative;margin-top:20px}
+    .nav-links{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
 
-.carousel{
-  display:flex;
-  gap:16px;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-}
-.shot{
-  flex:0 0 300px;
-  scroll-snap-align:start;
-  background:var(--panel);
-  border-radius:16px;
-  overflow:hidden;
-  border:1px solid var(--border);
-}
-.shot img{width:100%}
-.caption{padding:14px}
-.caption p{color:var(--muted)}
+    .nav-links a{
+      color:var(--muted);
+      text-decoration:none;
+      transition:color .2s ease;
+    }
 
-.carousel-btn{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:rgba(13,17,22,.8);
-  border:1px solid var(--border);
-  color:white;
-  font-size:22px;
-  cursor:pointer;
-}
-.carousel-btn.left{left:-10px}
-.carousel-btn.right{right:-10px}
+    .nav-links a:hover{color:#fff}
 
-@media(max-width:768px){
-  .carousel-btn{display:none}
-  .card-grid{grid-template-columns:1fr}
-  .shot{flex:0 0 85%}
-}
-</style>
+    .hero{
+      text-align:center;
+      padding:84px 0 72px;
+    }
+
+    h1{
+      font-size:clamp(2.5rem,5vw,4.4rem);
+      line-height:1.04;
+      letter-spacing:-.03em;
+      margin-bottom:16px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      max-width:760px;
+      margin:auto;
+      font-size:1.06rem;
+    }
+
+    .cta-row{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:28px;
+    }
+
+    .btn{
+      padding:14px 22px;
+      border-radius:18px;
+      font-weight:700;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--border);
+      transition:transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+
+    .btn-primary{
+      background:var(--button);
+      color:var(--button-text);
+      border-color:transparent;
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:var(--text);
+    }
+
+    .btn-secondary:hover{
+      border-color:var(--border-strong);
+      background:var(--highlight-soft);
+    }
+
+    .section{padding:54px 0}
+
+    .section-title{
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    .section-title h2{
+      font-size:clamp(1.8rem,3vw,2.5rem);
+      margin-bottom:10px;
+    }
+
+    .section-title p{
+      color:var(--muted);
+      max-width:800px;
+      margin:auto;
+    }
+
+    .section-logo{
+      width:180px;
+      margin:0 auto 20px;
+      filter:drop-shadow(0 10px 30px rgba(40,198,219,.12));
+    }
+
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:16px;
+      margin-top:28px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border:1px solid var(--border);
+      padding:22px;
+      border-radius:20px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+
+    .card h3{
+      margin-bottom:8px;
+      font-size:1.02rem;
+    }
+
+    .card p{
+      color:var(--muted);
+      font-size:.96rem;
+    }
+
+    .carousel-wrap{
+      position:relative;
+      margin-top:24px;
+    }
+
+    .carousel-shell{
+      position:relative;
+    }
+
+    .carousel{
+      display:flex;
+      gap:16px;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      padding:6px 2px 16px;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(40,198,219,.45) rgba(255,255,255,.06);
+    }
+
+    .carousel::-webkit-scrollbar{
+      height:10px;
+    }
+
+    .carousel::-webkit-scrollbar-track{
+      background:rgba(255,255,255,.05);
+      border-radius:999px;
+    }
+
+    .carousel::-webkit-scrollbar-thumb{
+      background:rgba(40,198,219,.45);
+      border-radius:999px;
+    }
+
+    .shot{
+      flex:0 0 320px;
+      scroll-snap-align:start;
+      background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border-radius:24px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      transition:transform .18s ease, border-color .18s ease;
+    }
+
+    .shot:hover{
+      transform:translateY(-2px);
+      border-color:var(--border-strong);
+    }
+
+    .shot img{
+      width:100%;
+      aspect-ratio:9 / 19.5;
+      object-fit:cover;
+      background:#0a0f14;
+    }
+
+    .caption{
+      padding:18px 16px 20px;
+      text-align:center;
+    }
+
+    .caption h3{
+      font-size:1.02rem;
+      margin-bottom:8px;
+    }
+
+    .caption p{
+      color:var(--muted);
+      font-size:.97rem;
+      line-height:1.45;
+    }
+
+    .carousel-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:.92rem;
+      margin-top:10px;
+    }
+
+    .carousel-btn{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:46px;
+      height:46px;
+      border-radius:999px;
+      background:rgba(13,17,22,.88);
+      border:1px solid var(--border-strong);
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--shadow);
+      transition:background .18s ease, border-color .18s ease, transform .18s ease;
+      z-index:3;
+    }
+
+    .carousel-btn:hover{
+      background:rgba(40,198,219,.12);
+      border-color:rgba(40,198,219,.45);
+    }
+
+    .carousel-btn:active{
+      transform:translateY(-50%) scale(.98);
+    }
+
+    .carousel-btn svg{
+      width:20px;
+      height:20px;
+    }
+
+    .carousel-btn.left{left:-12px}
+    .carousel-btn.right{right:-12px}
+
+    .step-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-top:28px;
+    }
+
+    .step{
+      background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:24px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+
+    .step p{
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .step-num{
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      background:var(--highlight);
+      color:#071219;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 14px;
+      font-weight:800;
+    }
+
+    .socials{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    .social-link{
+      padding:14px 18px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+      text-decoration:none;
+      min-width:180px;
+      text-align:center;
+      transition:transform .18s ease, border-color .18s ease;
+    }
+
+    .social-link:hover{
+      transform:translateY(-1px);
+      border-color:var(--border-strong);
+    }
+
+    .about{
+      background:linear-gradient(180deg, var(--panel), var(--panel-soft));
+      padding:32px;
+      border-radius:24px;
+      border:1px solid var(--border);
+      text-align:center;
+      max-width:860px;
+      margin:28px auto 0;
+      box-shadow:var(--shadow);
+    }
+
+    .about h3{margin-bottom:10px}
+
+    .about p{
+      color:var(--muted);
+      margin-top:10px;
+    }
+
+    .footer-link{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-link:hover{color:var(--highlight)}
+
+    @media(max-width:1180px){
+      .card-grid{grid-template-columns:repeat(3,1fr)}
+      .carousel-btn.left{left:-8px}
+      .carousel-btn.right{right:-8px}
+    }
+
+    @media(max-width:900px){
+      .step-grid{grid-template-columns:1fr}
+      .shot{flex:0 0 290px}
+      .carousel-btn{display:none}
+    }
+
+    @media(max-width:640px){
+      .nav-inner{flex-direction:column}
+      .nav-links{gap:16px}
+      .card-grid{grid-template-columns:1fr}
+      .hero{padding:72px 0 56px}
+      .shot{flex:0 0 84vw}
+    }
+  </style>
 </head>
-
 <body>
 
-<nav class="nav">
-  <div class="wrap nav-inner">
-    <div class="brand">TableForge</div>
-    <div class="nav-links">
-      <a href="#screens">App</a>
-      <a href="#beta">Beta</a>
-      <a href="#about">About</a>
-    </div>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="wrap">
-    <h1>Track your hobby from sprue to tabletop.</h1>
-    <p>Organise units, build armies, track progress, and stay motivated.</p>
-    <a class="btn btn-primary" href="https://app.tableforge.club">Open Beta</a>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="card-grid">
-      <div class="card">
-        <h3>Track units</h3>
-        <p>Track readiness and store paint recipes alongside your units.</p>
-      </div>
-      <div class="card">
-        <h3>Build armies</h3>
-        <p>Create and import armies quickly with full composition visibility.</p>
-      </div>
-      <div class="card">
-        <h3>Log battles</h3>
-        <p>Keep a history of games and outcomes over time.</p>
-      </div>
-      <div class="card">
-        <h3>Share progress</h3>
-        <p>Post hobby updates and stay motivated.</p>
-      </div>
-      <div class="card">
-        <h3>Stay connected</h3>
-        <p>Chat with friends, groups, and keep up with events.</p>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">TableForge</div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#screens">See the app</a>
+        <a href="#beta">How to access the beta</a>
+        <a href="#social">Social channels</a>
+        <a href="#about">About us</a>
       </div>
     </div>
-  </div>
-</section>
+  </nav>
 
-<section class="section" id="screens">
-  <div class="wrap">
-    <div class="section-title">
-      <h2>See TableForge in action</h2>
-    </div>
-
-    <div class="carousel-wrap">
-
-      <button class="carousel-btn left" onclick="scrollCarousel(-1)">‹</button>
-
-      <div class="carousel" id="carousel">
-
-        <div class="shot"><img src="images/feed_screen.jpg"><div class="caption"><h3>Feed</h3><p>Community updates</p></div></div>
-        <div class="shot"><img src="images/feed_comments.jpg"><div class="caption"><h3>Comments</h3><p>Engage with posts</p></div></div>
-        <div class="shot"><img src="images/units_by_group.jpg"><div class="caption"><h3>Units</h3><p>Organised view</p></div></div>
-        <div class="shot"><img src="images/unit_detail_wargear.jpg"><div class="caption"><h3>Wargear</h3><p>Loadout tracking</p></div></div>
-        <div class="shot"><img src="images/unit_paint_recipe.jpg"><div class="caption"><h3>Paint recipes</h3><p>Store schemes</p></div></div>
-        <div class="shot"><img src="images/unit_statistics.jpg"><div class="caption"><h3>Stats</h3><p>Progress insights</p></div></div>
-        <div class="shot"><img src="images/units_by_collection.jpg"><div class="caption"><h3>Collections</h3><p>Group units</p></div></div>
-        <div class="shot"><img src="images/units_by_readiness.jpg"><div class="caption"><h3>Readiness</h3><p>Track progress</p></div></div>
-        <div class="shot"><img src="images/import_units.jpg"><div class="caption"><h3>Import</h3><p>Fast setup</p></div></div>
-        <div class="shot"><img src="images/multiple_armies.jpg"><div class="caption"><h3>Armies</h3><p>Multiple rosters</p></div></div>
-        <div class="shot"><img src="images/battle_summary.jpg"><div class="caption"><h3>Battles</h3><p>Game history</p></div></div>
-        <div class="shot"><img src="images/user_profile.jpg"><div class="caption"><h3>Profile</h3><p>Your hobby identity</p></div></div>
-        <div class="shot"><img src="images/private_group_chat.jpg"><div class="caption"><h3>Groups</h3><p>Private chats</p></div></div>
-        <div class="shot"><img src="images/group_events.jpg"><div class="caption"><h3>Events</h3><p>Stay organised</p></div></div>
-        <div class="shot"><img src="images/unit_history.jpg"><div class="caption"><h3>History</h3><p>Track usage</p></div></div>
-
+  <main id="home">
+    <section class="hero">
+      <div class="wrap">
+        <h1>Track your hobby from sprue to tabletop.</h1>
+        <p>TableForge helps you organise units, build armies, log battles, track progress, and share your hobby journey with other players.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://app.tableforge.club" target="_blank" rel="noopener">Open the beta</a>
+          <a class="btn btn-secondary" href="#screens">See the app</a>
+        </div>
       </div>
+    </section>
 
-      <button class="carousel-btn right" onclick="scrollCarousel(1)">›</button>
+    <section class="section">
+      <div class="wrap">
+        <div class="section-title">
+          <img class="section-logo" src="images/logo.png" alt="TableForge logo" />
+          <h2>What is TableForge?</h2>
+          <p>A focused hobby app for Warhammer 40k players who want to track progress, keep armies organised, record battles, and stay motivated through the hobby journey.</p>
+        </div>
 
-    </div>
-  </div>
-</section>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Track units</h3>
+            <p>Keep on top of what is boxed, built, painted, and tabletop ready, with paint recipes stored against your units.</p>
+          </div>
+          <div class="card">
+            <h3>Build armies</h3>
+            <p>Group your collection into armies, import rosters faster, and see points and composition at a glance.</p>
+          </div>
+          <div class="card">
+            <h3>Log battles</h3>
+            <p>Record games over time and build a usable history of your tabletop play.</p>
+          </div>
+          <div class="card">
+            <h3>Share progress</h3>
+            <p>Post updates, photos, and milestones from your hobby journey.</p>
+          </div>
+          <div class="card">
+            <h3>Stay connected</h3>
+            <p>Follow friends, join private groups, and keep up with events and hobby activity between games.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="section" id="beta">
-  <div class="wrap">
-    <div class="section-title">
-      <h2>Join the beta</h2>
-    </div>
-    <div style="text-align:center">
-      <a class="btn btn-primary" href="https://app.tableforge.club">Get started</a>
-    </div>
-  </div>
-</section>
+    <section class="section" id="screens">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>See TableForge in action</h2>
+          <p>Real screenshots from the current beta.</p>
+        </div>
 
-<section class="section" id="about">
-  <div class="wrap">
-    <div class="section-title">
-      <h2>About</h2>
-      <p>Built by hobbyists, for hobbyists.</p>
-    </div>
-  </div>
-</section>
+        <div class="carousel-wrap">
+          <div class="carousel-shell">
+            <button class="carousel-btn left" type="button" aria-label="Scroll screenshots left" onclick="scrollCarousel(-1)">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
 
-<script>
-function scrollCarousel(direction){
-  const carousel = document.getElementById('carousel');
-  const scrollAmount = carousel.clientWidth * 0.8;
-  carousel.scrollBy({
-    left: direction * scrollAmount,
-    behavior: 'smooth'
-  });
-}
-</script>
+            <div class="carousel" id="carousel">
 
+              <div class="shot">
+                <img src="images/feed_screen.jpg" alt="Feed screen">
+                <div class="caption">
+                  <h3>Hobby feed</h3>
+                  <p>See what the community is building, painting, and posting in real time.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/feed_comments.jpg" alt="Feed comments">
+                <div class="caption">
+                  <h3>Comments and progress</h3>
+                  <p>Drill into posts, view images, and follow the discussion around each update.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/units_by_group.jpg" alt="Units by group">
+                <div class="caption">
+                  <h3>Units by type</h3>
+                  <p>Organise your units into clear groupings and quickly find what you need.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/unit_detail_wargear.jpg" alt="Unit detail wargear">
+                <div class="caption">
+                  <h3>Wargear tracking</h3>
+                  <p>Capture how each unit is equipped and keep loadouts easy to reference.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/unit_paint_recipe.jpg" alt="Unit paint recipe">
+                <div class="caption">
+                  <h3>Paint recipes</h3>
+                  <p>Store and reuse paint schemes so your army stays consistent.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/unit_statistics.jpg" alt="Unit statistics">
+                <div class="caption">
+                  <h3>Unit statistics</h3>
+                  <p>Understand your collection with clear insights into progress and readiness.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/units_by_collection.jpg" alt="Units by collection">
+                <div class="caption">
+                  <h3>Collections</h3>
+                  <p>Group units in a way that reflects how you actually organise your hobby.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/units_by_readiness.jpg" alt="Units by readiness">
+                <div class="caption">
+                  <h3>Readiness tracking</h3>
+                  <p>Track progress from boxed to tabletop ready across your entire army.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/import_units.jpg" alt="Import units">
+                <div class="caption">
+                  <h3>Import units</h3>
+                  <p>Get started faster by importing existing units and reducing setup time.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/multiple_armies.jpg" alt="Multiple armies">
+                <div class="caption">
+                  <h3>Multiple armies</h3>
+                  <p>Manage different forces and switch between lists with ease.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/battle_summary.jpg" alt="Battle summary">
+                <div class="caption">
+                  <h3>Battle summaries</h3>
+                  <p>Record games and build a clear history of your tabletop performance.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/user_profile.jpg" alt="User profile">
+                <div class="caption">
+                  <h3>User profile</h3>
+                  <p>Show your hobby journey, collections, and activity in one place.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/private_group_chat.jpg" alt="Private group chat">
+                <div class="caption">
+                  <h3>Private groups</h3>
+                  <p>Share progress and chat with friends or club members in a focused space.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/group_events.jpg" alt="Group events">
+                <div class="caption">
+                  <h3>Events</h3>
+                  <p>Keep track of upcoming game nights, meetups, and club activity.</p>
+                </div>
+              </div>
+
+              <div class="shot">
+                <img src="images/unit_history.jpg" alt="Unit history">
+                <div class="caption">
+                  <h3>Unit history</h3>
+                  <p>See how a unit has evolved and been used across your battles.</p>
+                </div>
+              </div>
+
+            </div>
+
+            <button class="carousel-btn right" type="button" aria-label="Scroll screenshots right" onclick="scrollCarousel(1)">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+
+          <p class="carousel-note">Swipe on mobile, or use the arrows on desktop to explore more screens.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="beta">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>How to access the beta</h2>
+          <p>Getting started is straightforward.</p>
+        </div>
+
+        <div class="step-grid">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>Create an account</h3>
+            <p>Head to the beta app and register for free.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>Start building your profile</h3>
+            <p>Add units, armies, battles, hobby progress, and your first posts.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>Help shape TableForge</h3>
+            <p>Use the beta and give feedback as we keep improving the app.</p>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://app.tableforge.club" target="_blank" rel="noopener">Go to the beta</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="social">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>Our social channels</h2>
+          <p>Follow the build and see what is happening around TableForge.</p>
+        </div>
+
+        <div class="socials">
+          <a class="social-link" href="https://www.tiktok.com/@tableforgeclub" target="_blank" rel="noopener">TikTok</a>
+          <a class="social-link" href="https://www.youtube.com/@TableForge40k" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>About us</h2>
+          <p>Why we are building TableForge.</p>
+        </div>
+
+        <div class="about">
+          <h3>Built by hobbyists</h3>
+          <p>TableForge is being built by two hobbyists who wanted a better way to track painting progress, organise armies, record games, and stay motivated in the hobby.</p>
+          <p>Our goal is to create a home for hobbyists who want to move models from sprue to tabletop and enjoy the journey along the way.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="footer" style="text-align:center;font-size:.85rem;padding-top:18px">
+      <a href="legal.html" target="_blank" rel="noopener noreferrer" class="footer-link">
+        Terms of Use
+      </a>
+    </section>
+  </main>
+
+  <script>
+    function scrollCarousel(direction){
+      const carousel = document.getElementById('carousel');
+      if (!carousel) return;
+
+      const firstCard = carousel.querySelector('.shot');
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : 320;
+      const gap = 16;
+      const scrollAmount = cardWidth + gap;
+
+      carousel.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  </script>
 </body>
 </html>
